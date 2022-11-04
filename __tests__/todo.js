@@ -2,27 +2,36 @@
 
 const todoList = require("../todo");
 const { all, markAsComplete, add, dueToday, dueLater, overdue } = todoList();
-var a = [];
-const today = new Date().toLocaleDateString("en-CA");
+
+const today = new Date();
+const oneDay = 60 * 60 * 24 * 1000;
+const yesterday = new Date(today.getTime() - 1 * oneDay);
+const tomorrow = new Date(today.getTime() + 1 * oneDay);
+
+today.toLocaleDateString("en-CA");
+tomorrow.toLocaleDateString("en-CA");
+yesterday.toLocaleDateString("en-CA");
+
 describe("Todolist test suite", () => {
   beforeAll(() => {
-    a = [
-      { title: "Submit assignment", dueDate: "2022-11-01", completed: false },
-      { title: "Pay rent", dueDate: today, completed: true },
-      { title: "Service Vehicle", dueDate: today, completed: true },
-      { title: "File taxes", dueDate: "2022-11-04", completed: true },
-      { title: "Pay electric bill", dueDate: "2022-11-06", completed: false },
-    ];
+    add({ title: "Submit assignment", dueDate: yesterday, completed: false });
+    add({ title: "Pay rent", dueDate: today, completed: true });
+    add({ title: "Service Vehicle", dueDate: today, completed: true });
+    add({ title: "File taxes", dueDate: yesterday, completed: true });
+    add({ title: "Pay electric bill", dueDate: tomorrow, completed: false });
   });
 
   test("Todo that checks creating a new todo", () => {
-    a.forEach((x) => {
-      const todoItemsCount = all.length;
-      expect(all.length).toBe(todoItemsCount);
-      add(x);
-      expect(all.length).toBe(todoItemsCount + 1);
+    const todoItemsCount = all.length;
+    expect(all.length).toBe(todoItemsCount);
+    add({
+      title: "A new Todo",
+      dueDate: today,
+      completed: false,
     });
+    expect(all.length).toBe(todoItemsCount + 1);
   });
+
   test("Todo that checks marking a todo as completed.", () => {
     for (let i = 0; i < all.length; i++) {
       if (all[i].completed === false) {
@@ -32,26 +41,19 @@ describe("Todolist test suite", () => {
       expect(all[i].completed).toBe(true);
     }
   });
+
   test("Todo that checks retrieval of overdue items.", () => {
-    overdue().forEach((x) => {
-      let f = x.dueDate < today;
-      expect(f).toEqual(true);
-      expect(overdue().length).toEqual(1);
-    });
+    const checkOverdue = overdue().every((item) => item.dueDate < today);
+    expect(checkOverdue).toEqual(true);
   });
 
   test("Todo that checks retrieval of due today items.", () => {
-    dueToday().forEach((x) => {
-      expect(dueToday().length).toEqual(2);
-      expect(x.dueDate).toEqual(today);
-    });
+    const checduetoday = dueToday().every((item) => item.duetoday === today);
+    expect(checduetoday).toEqual(true);
   });
 
   test("Todo that checks retrieval of due later items.", () => {
-    dueLater().forEach((x) => {
-      let s = x.dueDate > today;
-      expect(s).toEqual(true);
-      expect(dueLater().length).toEqual(2);
-    });
+    const checkduelater = dueLater().every((item) => item.dueDate > today);
+    expect(checkduelater).toEqual(true);
   });
 });
