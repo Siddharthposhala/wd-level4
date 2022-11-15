@@ -33,13 +33,9 @@ describe("Todolist test suite", () => {
   });
 
   test("Todo that checks marking a todo as completed.", () => {
-    for (let i = 0; i < all.length; i++) {
-      if (all[i].completed === false) {
-        expect(all[i].completed).toBe(false);
-        markAsComplete(i);
-      }
-      expect(all[i].completed).toBe(true);
-    }
+    expect(all[0].completed).toBe(false);
+    markAsComplete(0);
+    expect(all[0].completed).toBe(true);
   });
 
   test("Todo that checks retrieval of overdue items.", () => {

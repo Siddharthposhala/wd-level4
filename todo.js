@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const todoList = () => {
   const all = [];
   const add = (todoItem) => {
@@ -24,7 +25,7 @@ const todoList = () => {
       .map((todos) => {
         const complete = todos.completed ? "x" : " ";
         return `[${complete}] ${todos.title} ${
-          todos.dueDate == today ? " " : todos.dueDate
+          todos.dueDate == today ? "" : todos.dueDate
         }`;
       })
       .join("\n");
@@ -36,7 +37,6 @@ const todoList = () => {
     overdue,
     dueToday,
     dueLater,
-    toDisplayableList,
   };
 };
 module.exports = todoList;
